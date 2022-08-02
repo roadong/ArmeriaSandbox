@@ -15,6 +15,7 @@ import com.linecorp.armeria.server.encoding.EncodingService;
 import com.linecorp.armeria.server.logging.ContentPreviewingService;
 import com.linecorp.armeria.spring.ArmeriaServerConfigurator;
 import com.linecorp.armeria.spring.web.reactive.ArmeriaClientConfigurator;
+import com.magiell.springsandbox.sse.controller.SSEController;
 import io.netty.channel.EventLoopGroup;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +25,16 @@ import java.time.Duration;
 
 @Configuration
 public class ArmeriaServerConfigure {
+
+    private final SSEController sseController;
+
+    public ArmeriaServerConfigure(SSEController sseController) {
+        this.sseController = sseController;
+    }
+
     @Bean
     public static EventLoopGroup eventLoopGroup() {
-        return EventLoopGroups.newEventLoopGroup(Flags.numCommonWorkers(), "stem-webflux-worker");
+        return EventLoopGroups.newEventLoopGroup(Flags.numCommonWorkers(), "armeria-eventloop-thread");
     }
 
     @Bean
@@ -36,7 +44,7 @@ public class ArmeriaServerConfigure {
                 //.taskFunction()
                 // 기본 블로킹 스레드는 60초
                 //.keepAliveTime()
-                .threadNamePrefix("stem-webflux-blocking-thread")
+                .threadNamePrefix("long-task-blocking-thread")
                 .numThreads(Flags.numCommonBlockingTaskThreads()).build();
     }
 
@@ -54,13 +62,15 @@ public class ArmeriaServerConfigure {
             // 60초 타임아웃
             serverBuilder.idleTimeout(Duration.ofSeconds(60));
             serverBuilder.requestTimeout(Duration.ofSeconds(60));
-            serverBuilder.verboseResponses(true);
+            //serverBuilder.verboseResponses(true);
 
             serverBuilder.decorator(EncodingService.newDecorator());
             serverBuilder.decorator(ContentPreviewingService.newDecorator(Integer.MAX_VALUE, StandardCharsets.UTF_8));
             serverBuilder.decorator(DecodingService.newDecorator());
 
             serverBuilder.decorator(CorsService.builderForAnyOrigin().newDecorator());
+
+            serverBuilder.annotatedService(this.sseController);
 
             //노출 제한 헤더 off
             serverBuilder.disableServerHeader();
