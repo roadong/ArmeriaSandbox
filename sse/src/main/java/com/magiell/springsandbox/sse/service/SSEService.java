@@ -1,34 +1,32 @@
 package com.magiell.springsandbox.sse.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linecorp.armeria.common.sse.ServerSentEvent;
 import com.linecorp.armeria.common.util.TimeoutMode;
-import com.linecorp.armeria.internal.common.CancellationScheduler;
 import com.linecorp.armeria.server.ServiceRequestContext;
-import com.magiell.springsandbox.sse.configuration.ArmeriaServerConfigure;
+import com.magiell.springsandbox.sse.dto.StemMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 import org.springframework.stereotype.Service;
-import reactor.core.Disposable;
-import reactor.core.publisher.*;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Sinks;
 
 import java.time.Duration;
 import java.util.Objects;
-import java.util.function.Function;
 
 import static com.magiell.springsandbox.sse.configuration.ArmeriaServerConfigure.blockingTaskExecutor;
 import static reactor.core.scheduler.Schedulers.fromExecutor;
 
 @Service
 @Slf4j
-public class SSEService{
+public class SSEService {
     private static Sinks.Many<ServerSentEvent> sseStream;
     private static ServerSentEvent PING_SSE;
 
+    private final ObjectMapper objectMapper;
+
     private Runnable ssePreventRequestTimeout = () -> {
-        log.info("### Refresh Request Timeout");
+        log.debug("### Refresh Request Timeout");
         ServiceRequestContext.current().setRequestTimeout(TimeoutMode.SET_FROM_NOW, Duration.ofSeconds(60));
     };
 
@@ -36,6 +34,11 @@ public class SSEService{
         sseStream = Sinks.many().multicast().directAllOrNothing();
         PING_SSE = ServerSentEvent.builder().comment("ping").build();
     }
+
+    public SSEService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
 
     public static int currentSubscriberCount() {
         return sseStream.currentSubscriberCount();
@@ -67,5 +70,15 @@ public class SSEService{
                 .mergeWith(createSSEClientStream())
                 .filter(Objects::nonNull);
 //                .subscribeOn(fromExecutor(blockingTaskExecutor()));
+    }
+
+    public void emitPushMessage(StemMessage pushMessage) throws JsonProcessingException {
+        sseStream.tryEmitNext(ServerSentEvent.builder().event("push")
+                .data(objectMapper.writeValueAsString(pushMessage)).build());
+    }
+
+    public void emitBroadcastMessage(StemMessage broadcastMessage) throws JsonProcessingException {
+        sseStream.tryEmitNext(ServerSentEvent.builder().event("broadcast")
+                .data(objectMapper.writeValueAsString(broadcastMessage)).build());
     }
 }

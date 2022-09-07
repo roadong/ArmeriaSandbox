@@ -52,6 +52,7 @@ public class WebfluxSecurity {
                 .cors(corsSpec -> corsSpec.configurationSource(corsConfigurationSource()))
                 // https://github.com/spring-projects/spring-framework/issues/28575
                 .requestCache(ServerHttpSecurity.RequestCacheSpec::disable)
+                .securityMatcher(pathMatchers("/aaaa/**"))
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .logout(ServerHttpSecurity.LogoutSpec::disable)
