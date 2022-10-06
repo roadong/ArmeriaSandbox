@@ -1,12 +1,24 @@
 plugins {
     base
     idea
-    `kotlin-dsl`
+    java
 }
 
-group = "com.magiell.springsandbox"
-version = "1.0-SNAPSHOT"
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
 
-repositories {
-    mavenCentral()
+subprojects {
+    group = "com.gl.springsandbox"
+    version = "1.0-SNAPSHOT"
+}
+
+project(":sse") {
+    apply(plugin = "java")
+}
+
+project(":scg") {
+    apply(plugin = "java")
 }

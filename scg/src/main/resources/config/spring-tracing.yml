@@ -1,0 +1,24 @@
+spring:
+  # Zipkin Setting
+  zipkin:
+    base-url: <zipkin 서버 호스트 주소>
+    service:
+      name: <zipkin 으로 보낼 때 보내는 서비스 이름>
+    enabled: false
+  sleuth:
+    reactor:
+      # https://docs.spring.io/spring-cloud-sleuth/docs/current-SNAPSHOT/reference/html/integrations.html#sleuth-reactor-integration
+      # sleuth 에서 reactor 추적 방식 결정
+      instrumentation-type: decorate_queues
+    sampler:
+      probability: 1.0
+    baggage:
+      # baggage 를 태그로 검색할 수 있도록
+      tag-fields: []
+      # MDC 로 관리
+      # correlation-fields: []
+      # 전파 되는 헤더 리스트
+      remote-fields: []
+      # 로컬에서만 사용 되는 헤더 필드 리스트
+      # local-fields: []
+    enabled: false

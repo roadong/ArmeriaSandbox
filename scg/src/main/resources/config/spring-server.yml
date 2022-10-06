@@ -1,0 +1,6 @@
+# 서버 관련 환경 설정
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false

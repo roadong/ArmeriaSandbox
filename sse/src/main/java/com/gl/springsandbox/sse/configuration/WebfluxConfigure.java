@@ -1,4 +1,4 @@
-package com.magiell.springsandbox.sse.configuration;
+package com.gl.springsandbox.sse.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lettuce.core.RedisURI;

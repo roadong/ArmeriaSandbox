@@ -1,4 +1,4 @@
-package com.magiell.springsandbox.sse.dto;
+package com.gl.springsandbox.sse.dto;
 
 import lombok.AccessLevel;
 import lombok.Getter;

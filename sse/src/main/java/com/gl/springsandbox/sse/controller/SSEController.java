@@ -1,22 +1,17 @@
-package com.magiell.springsandbox.sse.controller;
+package com.gl.springsandbox.sse.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.linecorp.armeria.common.HttpRequest;
 import com.linecorp.armeria.common.HttpResponse;
 import com.linecorp.armeria.common.HttpStatus;
 import com.linecorp.armeria.common.sse.ServerSentEvent;
 import com.linecorp.armeria.server.ServiceRequestContext;
 import com.linecorp.armeria.server.annotation.*;
-import com.magiell.springsandbox.sse.dto.StemMessage;
-import com.magiell.springsandbox.sse.service.SSEService;
+import com.gl.springsandbox.sse.dto.StemMessage;
+import com.gl.springsandbox.sse.service.SSEService;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @PathPrefix("/sse-event")
 @RestController

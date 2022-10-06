@@ -1,5 +1,6 @@
-package com.magiell.springsandbox.sse.configuration;
+package com.gl.springsandbox.sse.configuration;
 
+import com.gl.springsandbox.sse.controller.SSEController;
 import com.linecorp.armeria.client.ClientFactory;
 import com.linecorp.armeria.client.circuitbreaker.CircuitBreakerClient;
 import com.linecorp.armeria.client.circuitbreaker.CircuitBreakerRule;
@@ -15,7 +16,6 @@ import com.linecorp.armeria.server.encoding.EncodingService;
 import com.linecorp.armeria.server.logging.ContentPreviewingService;
 import com.linecorp.armeria.spring.ArmeriaServerConfigurator;
 import com.linecorp.armeria.spring.web.reactive.ArmeriaClientConfigurator;
-import com.magiell.springsandbox.sse.controller.SSEController;
 import io.netty.channel.EventLoopGroup;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

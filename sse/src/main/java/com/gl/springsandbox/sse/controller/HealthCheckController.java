@@ -1,4 +1,4 @@
-package com.magiell.springsandbox.sse.controller;
+package com.gl.springsandbox.sse.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

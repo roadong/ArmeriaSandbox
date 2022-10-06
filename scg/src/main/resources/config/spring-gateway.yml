@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: <서버 이름>
+  cloud:
+    gateway:
+      globalcors: #cors 설정
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns: [ "*" ]
+            allowed-origins: [ "*" ]
+            allowed-headers: [ "*" ]
+            allowed-methods:
+              - POST
+              - GET
+              - PUT
+              - DELETE
+      default-filters:
+        - name: SCGLogFilter
+      routes:
+        - id: <라우팅 서비스 이름>
+          uri: <라우팅 서비스 호스트 주소>
+          predicates:
+            - name: Path # 경로 호출을 비교
+              args:
+                patterns: /service/a/** # 해당 경로 패턴일 경우 라우팅
+            - name: Method # 메서드 호출을 비교
+              args:
+                methods: [ GET ] # GET 메서드 일 경우 라우팅
+          filters:
+            - name: RewritePath # 경로를 재설성
+              args:
+                regexp: /service/a/(?<path>.*) # 서비스 호출 된 경로
+                replacement: /$\{path} # 치환한 경로
+            - name: CircuitBreaker # 서킷브레이커 설정
+              args:
+                name: CircuitBreaker
+                fallbackUri: forward:/fallback # 포워딩 경로
+                statusCodes: [ 503, 500, 502 ] # 해당 응답코드가 오면 발동
+          metadata:
+            connect-timeout: 1000 # 연결 시간 설정
+            response-timeout: 1000 # 응답 시간 설정

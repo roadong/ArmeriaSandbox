@@ -1,4 +1,4 @@
-package com.magiell.springsandbox.sse.service;
+package com.gl.springsandbox.sse.service;
 
 import com.linecorp.armeria.common.sse.ServerSentEvent;
 import com.linecorp.armeria.common.util.TimeoutMode;

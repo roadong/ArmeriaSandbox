@@ -1,0 +1,8 @@
+# 설정 값이 많으면 설정 카테고리 별로 쪼개본다.
+spring:
+  config:
+    import:
+      - classpath:/config/spring-server.yml
+      - classpath:/config/spring-tracing.yml
+      - classpath:/config/spring-gateway.yml
+      - classpath:/config/spring-cb.yml

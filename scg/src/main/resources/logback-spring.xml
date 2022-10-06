@@ -1,0 +1,28 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <!--    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />-->
+    <!--    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />-->
+    <!--    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />-->
+    <springProperty scope="context" name="springAppName" source="spring.application.name"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread][${springAppName:--}, %X{traceId:--}/%X{spanId:--}] %-5level %logger{36} - %msg%n" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!--    디버그인 경우만-->
+    <springProfile name="debug">
+        <logger name=" org.springframework.cloud.gateway" level="TRACE">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+        <logger name="reactor.netty" level="TRACE">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+    </springProfile>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

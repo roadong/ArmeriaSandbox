@@ -1,4 +1,4 @@
-package com.magiell.springsandbox.sse.security;
+package com.gl.springsandbox.sse.security;
 
 
 import lombok.extern.slf4j.Slf4j;

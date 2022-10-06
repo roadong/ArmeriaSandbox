@@ -1,11 +1,12 @@
-package com.magiell.springsandbox.sse.service;
+package com.gl.springsandbox.sse.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gl.springsandbox.sse.configuration.ArmeriaServerConfigure;
 import com.linecorp.armeria.common.sse.ServerSentEvent;
 import com.linecorp.armeria.common.util.TimeoutMode;
 import com.linecorp.armeria.server.ServiceRequestContext;
-import com.magiell.springsandbox.sse.dto.StemMessage;
+import com.gl.springsandbox.sse.dto.StemMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -14,7 +15,6 @@ import reactor.core.publisher.Sinks;
 import java.time.Duration;
 import java.util.Objects;
 
-import static com.magiell.springsandbox.sse.configuration.ArmeriaServerConfigure.blockingTaskExecutor;
 import static reactor.core.scheduler.Schedulers.fromExecutor;
 
 @Service
@@ -55,7 +55,7 @@ public class SSEService {
     private Flux<ServerSentEvent> createSSEClientStream() {
         SSEClientSubscriber subscriber = new SSEClientSubscriber();
         return Flux.interval(Duration.ofSeconds(5))
-                .publishOn(fromExecutor(blockingTaskExecutor()))
+                .publishOn(fromExecutor(ArmeriaServerConfigure.blockingTaskExecutor()))
                 .map(idx -> {
                     ssePreventRequestTimeout.run();
                     return PING_SSE;
@@ -66,7 +66,7 @@ public class SSEService {
 
     public Flux<ServerSentEvent> subscribeToSSEStream() {
         return sseStream.asFlux()
-                .publishOn(fromExecutor(blockingTaskExecutor()))
+                .publishOn(fromExecutor(ArmeriaServerConfigure.blockingTaskExecutor()))
                 .mergeWith(createSSEClientStream())
                 .filter(Objects::nonNull);
 //                .subscribeOn(fromExecutor(blockingTaskExecutor()));
