@@ -12,3 +12,6 @@ armeria:
     - port: 20007    # Port 8080 will serve only HTTP.
       protocols:
         - http
+spring:
+  webflux:
+    base-path: /stem

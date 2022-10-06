@@ -2,6 +2,10 @@
 *.class
 .gradle
 .idea
+.run
+
+#intellij files
+
 
 out/
 build/

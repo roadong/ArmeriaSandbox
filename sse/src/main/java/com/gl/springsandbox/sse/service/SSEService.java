@@ -14,18 +14,19 @@ import reactor.core.publisher.Sinks;
 
 import java.time.Duration;
 import java.util.Objects;
+import java.util.UUID;
 
 import static reactor.core.scheduler.Schedulers.fromExecutor;
 
 @Service
 @Slf4j
 public class SSEService {
-    private static Sinks.Many<ServerSentEvent> sseStream;
-    private static ServerSentEvent PING_SSE;
+    private static final Sinks.Many<ServerSentEvent> sseStream;
+    private static final ServerSentEvent PING_SSE;
 
     private final ObjectMapper objectMapper;
 
-    private Runnable ssePreventRequestTimeout = () -> {
+    private final Runnable ssePreventRequestTimeout = () -> {
         log.debug("### Refresh Request Timeout");
         ServiceRequestContext.current().setRequestTimeout(TimeoutMode.SET_FROM_NOW, Duration.ofSeconds(60));
     };
@@ -34,6 +35,8 @@ public class SSEService {
         sseStream = Sinks.many().multicast().directAllOrNothing();
         PING_SSE = ServerSentEvent.builder().comment("ping").build();
     }
+
+
 
     public SSEService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -53,15 +56,16 @@ public class SSEService {
 //    };
 
     private Flux<ServerSentEvent> createSSEClientStream() {
-        SSEClientSubscriber subscriber = new SSEClientSubscriber();
-        return Flux.interval(Duration.ofSeconds(5))
+        final String clientId = UUID.randomUUID().toString();
+        return Flux.interval(Duration.ofSeconds(10))
                 .publishOn(fromExecutor(ArmeriaServerConfigure.blockingTaskExecutor()))
                 .map(idx -> {
                     ssePreventRequestTimeout.run();
                     return PING_SSE;
                 })
-                .doOnCancel(subscriber::dispose);
-//                .subscribeOn(fromExecutor(blockingTaskExecutor()));
+                .doFirst(() -> log.info("### {} connect..", clientId))
+                .doOnCancel(() -> log.info("### {} disconnect..", clientId))
+                .doOnError(throwable -> log.error("### client connection error", throwable));
     }
 
     public Flux<ServerSentEvent> subscribeToSSEStream() {
