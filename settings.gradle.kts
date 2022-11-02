@@ -1,2 +1,2 @@
 rootProject.name = "springsandbox"
-include("sse", "scg")
+include("sse", "scg", "api")

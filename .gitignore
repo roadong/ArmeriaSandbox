@@ -5,13 +5,17 @@
 .run
 
 #intellij files
-
+*.iml
+*.ipr
+*.ids
 
 out/
 build/
 
 # Log file
 *.log
+
+resources/
 
 # BlueJ files
 *.ctxt

@@ -1,16 +1,12 @@
 plugins {
     base
-    idea
-    java
 }
 
 allprojects {
     repositories {
         mavenCentral()
     }
-}
 
-subprojects {
     group = "com.gl.springsandbox"
     version = "1.0-SNAPSHOT"
 }
@@ -20,5 +16,9 @@ project(":sse") {
 }
 
 project(":scg") {
+    apply(plugin = "java")
+}
+
+project(":api") {
     apply(plugin = "java")
 }
