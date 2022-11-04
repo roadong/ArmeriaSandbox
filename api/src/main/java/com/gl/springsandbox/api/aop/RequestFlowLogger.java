@@ -5,14 +5,13 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 
 /**
@@ -23,7 +22,9 @@ import java.util.stream.Stream;
 @Slf4j
 public class RequestFlowLogger {
 
-    private String combineParameterInfo(List<String> paramNameList, List<Object> paramValueList) {
+    private String combineParameterInfo(JoinPoint joinPoint) {
+        List<Object> paramNameList = getParameterValues(joinPoint);
+        List<String> paramValueList = getParameterNameList(joinPoint);
         StringJoiner joiner = new StringJoiner(",");
         for (int idx = 0; idx < paramNameList.size(); idx++) {
             joiner.add("[%s=%s]".formatted(paramNameList.get(idx), paramValueList.get(idx)));
@@ -31,29 +32,36 @@ public class RequestFlowLogger {
         return joiner.toString();
     }
 
-    @AfterReturning(pointcut = "within(com.gl.springsandbox.api.controller..*)",
-            returning = "response")
-    public void flowController(JoinPoint joinPoint, ResponseEntity<?> response) {
-
-        log.info("### API 요청 처리 완료");
+    private List<Object> getParameterValues(JoinPoint joinPoint) {
+        return Arrays.asList(joinPoint.getArgs());
     }
 
-    @AfterThrowing(pointcut = "within(com.gl.springsandbox.api.controller.*)",
-            throwing = "exception")
+    private List<String> getParameterNameList(JoinPoint joinPoint) {
+        MethodSignature signature = ((MethodSignature) joinPoint.getSignature());
+        return Arrays.asList(signature.getParameterNames());
+    }
+
+    private String getMethodName(JoinPoint joinPoint) {
+        MethodSignature signature = ((MethodSignature) joinPoint.getSignature());
+        return signature.getMethod().getName();
+    }
+
+    @AfterReturning(pointcut = "within(com.gl.springsandbox.api.controller..*)", returning = "response")
+    public void flowController(JoinPoint joinPoint, ResponseEntity<?> response) {
+        log.info("### API 요청 처리 완료 - controller: [%s] / response: [%s]".formatted(getMethodName(joinPoint), response));
+    }
+
+    @AfterThrowing(pointcut = "within(com.gl.springsandbox.api.controller.*)", throwing = "exception")
     public void flowControllerException(JoinPoint joinPoint, Throwable exception) {
         log.error("### API 요청 처리 중 예외 발생", exception);
     }
 
-
-    @AfterReturning(pointcut = "within(com.gl.springsandbox.api.service..*)",
-            returning = "result")
+    @AfterReturning(pointcut = "within(com.gl.springsandbox.api.service..*)", returning = "result")
     public void flowService(JoinPoint joinPoint, Object result) {
-
-        log.info("### 서비스 요청 처리 완료");
+        log.info("### 서비스 요청 처리 완료 - service: [%s] / response: [%s]".formatted(getMethodName(joinPoint), result));
     }
 
-    @AfterThrowing(pointcut = "within(com.gl.springsandbox.api.service..*)",
-            throwing = "exception")
+    @AfterThrowing(pointcut = "within(com.gl.springsandbox.api.service..*)", throwing = "exception")
     public void flowServiceException(JoinPoint joinPoint, Throwable exception) {
         log.error("### 서비스 처리 중 예외 발생", exception);
     }
