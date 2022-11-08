@@ -2,6 +2,7 @@ package com.gl.springsandbox.api.controller;
 
 import com.gl.springsandbox.api.dto.User;
 import com.gl.springsandbox.api.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,12 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable long id) {
-        return ResponseEntity.noContent().build();
+        boolean isDeleted = userService.deleteUser(id);
+        if(isDeleted) {
+            return ResponseEntity.noContent().build();
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
     }
 }

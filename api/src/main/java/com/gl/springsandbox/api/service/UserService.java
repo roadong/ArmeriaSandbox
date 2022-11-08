@@ -24,7 +24,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User getUser(long id) {
         var user = customerRepository.findById(id).orElseThrow();
-        return User.convertEntityToDto(user);
+        return User.entityToDtoBuilder().customer(user).build();
     }
 
     @Transactional
@@ -32,7 +32,7 @@ public class UserService {
         var updateUser = customerRepository.save(Customer.builder()
                 .user(userInfo)
                 .operator("operator").build());
-        return User.convertEntityToDto(updateUser);
+        return User.entityToDtoBuilder().customer(updateUser).build();
     }
 
     @Transactional

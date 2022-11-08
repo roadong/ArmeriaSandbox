@@ -43,6 +43,8 @@ public class SecurityConfigure {
         http.httpBasic().disable();
         http.formLogin().disable();
 
+        http.anonymous().authorities("ROLE_VIEWER");
+
         http.authorizeRequests().antMatchers("/api/**").permitAll();
 
         return http.build();

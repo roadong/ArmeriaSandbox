@@ -1,10 +1,8 @@
 package com.gl.springsandbox.api.entity;
 
 import com.gl.springsandbox.api.dto.User;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import net.bytebuddy.build.ToStringPlugin;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -13,6 +11,7 @@ import static java.util.Objects.nonNull;
 
 @Entity(name = "CUSTOMER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Customer extends TimeAuditor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,12 +30,12 @@ public class Customer extends TimeAuditor {
     private String updateBy;
 
     @Builder
-    public Customer(User user, String operator) {
-        if(nonNull(user.userId())) {
-            this.id = user.userId();
+    public Customer(User user) {
+        if(nonNull(user.getUserId())) {
+            this.id = user.getUserId();
         }
-        this.name = user.userName();
-        this.address = user.address();
-        this.updateBy = operator;
+        this.name = user.getUserName();
+        this.address = user.getAddress();
+        this.updateBy = user.getOperator();
     }
 }
