@@ -13,6 +13,7 @@ public abstract class Operator {
     private final String operator;
 
     public Operator() {
+        // 익명 세션을 구현했으므로 인증 정보는 최소 anonymousUser 는 나온다
         this.operator = SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

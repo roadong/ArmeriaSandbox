@@ -5,10 +5,7 @@ import com.gl.springsandbox.api.entity.Customer;
 import lombok.*;
 
 /**
- * 유저 레코드 dto
- * @param userId 유저 아이디
- * @param userName 유저 이름
- * @param address 주소
+ * 유저 DTO
  */
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString

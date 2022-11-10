@@ -22,3 +22,7 @@ project(":scg") {
 project(":api") {
     apply(plugin = "java")
 }
+
+project(":authorization_server") {
+    apply(plugin = "java")
+}
