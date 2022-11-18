@@ -30,6 +30,11 @@ public class UserController {
         return ResponseEntity.ok(userInfo);
     }
 
+    @GetMapping("/info")
+    public ResponseEntity<?> getUserInfo() {
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> modifyUserInfo(@PathVariable long id,
                                             @RequestBody User userInfo) {

@@ -10,6 +10,7 @@ import java.util.Objects;
 import static java.util.Objects.nonNull;
 
 @Entity(name = "CUSTOMER")
+@Table(name = "CUSTOMER", uniqueConstraints = @UniqueConstraint(columnNames = { "EMAIL" }))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class Customer extends TimeAuditor {
@@ -21,9 +22,26 @@ public class Customer extends TimeAuditor {
     @Column(name = "NAME")
     @Getter
     private String name;
+
+    @Column(name = "EMAIL")
+    @Getter
+    private String email;
+
+    @Column(name = "PASSWORD")
+    @Getter
+    private String password;
+
     @Column(name = "ADDRESS")
     @Getter
     private String address;
+
+    @Column(name = "ROLE")
+    @Getter
+    private String role;
+
+    @Column(name = "ENABLED")
+    @Getter
+    private boolean enabled;
 
     @Column(name = "OPERATION_USER")
     @Getter

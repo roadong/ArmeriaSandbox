@@ -31,7 +31,7 @@ public class UserService {
     public User modifyUser(User userInfo) {
         var updateUser = customerRepository.save(Customer.builder()
                 .user(userInfo)
-                .operator("operator").build());
+                .build());
         return User.entityToDtoBuilder().customer(updateUser).build();
     }
 

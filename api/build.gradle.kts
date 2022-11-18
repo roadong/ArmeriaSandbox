@@ -21,11 +21,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-devtools")
 //    implementation("org.springframework.boot:spring-boot-starter-logging")
     // aop
     implementation("org.springframework.boot:spring-boot-starter-aop")
+
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.security:spring-security-oauth2-authorization-server:0.3.1")
 
 //    compileOnly("javax.xml.bind:jaxb-api")
 //    compileOnly("jakarta.xml.bind:jakarta.xml.bind-api")
