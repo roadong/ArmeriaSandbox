@@ -4,14 +4,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
-@Entity
+
 @RedisHash(value = "accessToken", timeToLive = 60 * 60 * 24)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString

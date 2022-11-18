@@ -87,9 +87,8 @@ public class SecurityConfigure {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 
-
+//.antMatchers("/authentication/**").permitAll()
         http.authorizeRequests()
-                .antMatchers("/authentication/**").permitAll()
                 .antMatchers("/api/**").authenticated()
                 .and()
                 .exceptionHandling()
