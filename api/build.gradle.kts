@@ -28,7 +28,7 @@ dependencies {
     // aop
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+//    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.security:spring-security-oauth2-authorization-server:0.3.1")
 
 //    compileOnly("javax.xml.bind:jaxb-api")

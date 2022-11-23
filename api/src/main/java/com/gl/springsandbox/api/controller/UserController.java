@@ -4,6 +4,7 @@ import com.gl.springsandbox.api.dto.User;
 import com.gl.springsandbox.api.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -31,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<?> getUserInfo() {
+    public ResponseEntity<?> getUserInfo(Authentication authentication) {
         return ResponseEntity.ok().build();
     }
 
