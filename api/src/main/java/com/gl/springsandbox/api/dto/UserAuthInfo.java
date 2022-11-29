@@ -4,6 +4,7 @@ import com.gl.springsandbox.api.entity.Customer;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class UserAuthInfo implements UserDetails {
 
     private String userName;

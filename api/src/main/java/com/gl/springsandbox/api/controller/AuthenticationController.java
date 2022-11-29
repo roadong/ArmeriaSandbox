@@ -1,9 +1,11 @@
 package com.gl.springsandbox.api.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.gl.springsandbox.api.dto.request.SignUpInfo;
 import com.gl.springsandbox.api.security.token.AuthenticationTokenHelper;
 import com.gl.springsandbox.api.service.CustomUserDetailService;
 import com.gl.springsandbox.api.service.TokenService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.ValidationException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -30,7 +33,7 @@ public class AuthenticationController {
 
     @PostMapping("/account/signin")
     public ResponseEntity<?> authentication(@RequestBody String encryptAuth,
-                                            HttpServletResponse response) throws ValidationException, JsonProcessingException {
+                                            HttpServletResponse response) throws JsonProcessingException {
         final String userName = "test";
         final String password = "1234";
 
@@ -45,8 +48,8 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/account/signup")
-    public ResponseEntity<?> signup() {
+    @PostMapping(value = "/account/signup", consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<?> signup(@RequestBody SignUpInfo accountInfo) {
         return ResponseEntity.noContent().build();
     }
 }

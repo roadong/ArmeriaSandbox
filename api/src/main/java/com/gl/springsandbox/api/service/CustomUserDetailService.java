@@ -31,9 +31,9 @@ public class CustomUserDetailService implements UserDetailsService, UserDetailsP
         return UserAuthInfo.builder().customer(user).build();
     }
 
-    public void validPassword(UserDetails userDetails, String challenge) throws ValidationException {
+    public void validPassword(UserDetails userDetails, String challenge) {
         if(!passwordEncoder.matches(challenge, userDetails.getPassword())) {
-            throw new ValidationException("### 비밀번호가 틀립니다");
+            throw new IllegalStateException("### 비밀번호가 틀립니다");
         }
     }
 

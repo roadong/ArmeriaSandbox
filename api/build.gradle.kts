@@ -6,6 +6,7 @@ plugins {
 dependencyManagement {
     imports {
         mavenBom("org.springframework.boot:spring-boot-dependencies:2.7.4")
+        mavenBom("org.springframework.session:spring-session-bom:2021.1.1")
     }
 }
 
@@ -24,6 +25,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-devtools")
+    implementation("org.springframework.session:spring-session-data-redis")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 //    implementation("org.springframework.boot:spring-boot-starter-logging")
     // aop
     implementation("org.springframework.boot:spring-boot-starter-aop")

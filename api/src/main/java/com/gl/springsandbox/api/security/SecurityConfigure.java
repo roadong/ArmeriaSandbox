@@ -1,39 +1,46 @@
 package com.gl.springsandbox.api.security;
 
 import com.gl.springsandbox.api.security.filter.DefaultAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigure {
 
-    private final AuthenticationProvider defaultAuthenticationProvider;
+    @Value("${:_atc}")
+    private String realmValue;
 
-    private final OncePerRequestFilter authenticationProcessingFilter;
+    private final OncePerRequestFilter customAuthenticationFilter;
 
-    public SecurityConfigure(AuthenticationProvider defaultAuthenticationProvider,
-                             DefaultAuthenticationFilter authenticationProcessingFilter) {
-        this.defaultAuthenticationProvider = defaultAuthenticationProvider;
-        this.authenticationProcessingFilter = authenticationProcessingFilter;
+    public SecurityConfigure(DefaultAuthenticationFilter customAuthenticationFilter) {
+        this.customAuthenticationFilter = customAuthenticationFilter;
     }
 
 
@@ -57,7 +64,8 @@ public class SecurityConfigure {
 
     @Bean
     public SecurityFilterChain securityWebFilterChain(HttpSecurity http) throws Exception {
-        http.addFilterAt(authenticationProcessingFilter, AbstractPreAuthenticatedProcessingFilter.class);
+        ((DefaultAuthenticationFilter) this.customAuthenticationFilter).setMatcherList(authenticationPathMatcher());
+        http.addFilterAt(customAuthenticationFilter, AbstractPreAuthenticatedProcessingFilter.class);
 
 //        // 공통 옵션 추가
         http.csrf(AbstractHttpConfigurer::disable)
@@ -75,15 +83,16 @@ public class SecurityConfigure {
                         // 세션 안 씀
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-//        // 라우터 옵션 추가
+        // 라우터 옵션 추가
         http
-                .authenticationProvider(defaultAuthenticationProvider)
                 .requestMatchers().antMatchers("/api/user/**") // 인가 처리 경로 매칭
                 .and()
-                .authorizeRequests()
+                .authorizeHttpRequests()
                 .antMatchers("/api/user/**").authenticated()
                 .and()
-                .exceptionHandling().accessDeniedHandler(new AccessDeniedHandlerImpl());
+                .exceptionHandling()
+                .accessDeniedHandler(new AccessDeniedHandlerImpl())
+                .authenticationEntryPoint(defaultAuthenticationEntryPoint());
 
         return http.build();
     }
@@ -91,6 +100,22 @@ public class SecurityConfigure {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint defaultAuthenticationEntryPoint() throws Exception {
+        DefaultAuthenticationEntryPoint authenticationEntryPoint = new DefaultAuthenticationEntryPoint();
+        authenticationEntryPoint.setRealm(realmValue);
+        authenticationEntryPoint.afterPropertiesSet();
+        return authenticationEntryPoint;
+    }
+
+    @Bean
+    AndRequestMatcher authenticationPathMatcher() {
+        List<AntPathRequestMatcher> list = Stream.of("/api/user/**")
+                .map(AntPathRequestMatcher::new)
+                .toList();
+        return new AndRequestMatcher(list.toArray(new RequestMatcher[]{}));
     }
 
 }
