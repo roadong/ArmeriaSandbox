@@ -2,6 +2,7 @@ package com.gl.springsandbox.api.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gl.springsandbox.api.dto.request.SignUpInfo;
+import com.gl.springsandbox.api.security.crypt.CryptHandler;
 import com.gl.springsandbox.api.security.token.AuthenticationTokenHelper;
 import com.gl.springsandbox.api.service.CustomUserDetailService;
 import com.gl.springsandbox.api.service.TokenService;
@@ -13,9 +14,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.ValidationException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
+
+import static com.gl.springsandbox.api.security.crypt.CryptUtils.selectCrypt;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -25,15 +36,19 @@ public class AuthenticationController {
 
     private final TokenService tokenService;
 
+    private final CryptHandler<String, String> cryptor;
+
     public AuthenticationController(CustomUserDetailService userDetailService,
-                                    TokenService tokenService) {
+                                    TokenService tokenService) throws NoSuchPaddingException, NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         this.userDetailService = userDetailService;
         this.tokenService = tokenService;
+        this.cryptor = selectCrypt("decrypt-RSA");
     }
 
     @PostMapping("/account/signin")
     public ResponseEntity<?> authentication(@RequestBody String encryptAuth,
-                                            HttpServletResponse response) throws JsonProcessingException {
+                                            HttpServletResponse response) throws JsonProcessingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException {
+        String decrypt = cryptor.decrypt(encryptAuth);
         final String userName = "test";
         final String password = "1234";
 

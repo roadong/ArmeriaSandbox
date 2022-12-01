@@ -1,13 +1,21 @@
 package com.gl.springsandbox.api.controller;
 
 import com.gl.springsandbox.api.dto.User;
+import com.gl.springsandbox.api.security.crypt.CryptHandler;
+import com.gl.springsandbox.api.security.crypt.CryptUtils;
 import com.gl.springsandbox.api.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.NoSuchPaddingException;
+import java.io.IOException;
 import java.net.URI;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import static com.gl.springsandbox.api.security.crypt.CryptUtils.selectCrypt;
 
 @RestController
 @RequestMapping("/api/user")

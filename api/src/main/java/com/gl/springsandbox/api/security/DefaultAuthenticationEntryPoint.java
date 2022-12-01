@@ -32,7 +32,7 @@ public class DefaultAuthenticationEntryPoint implements AuthenticationEntryPoint
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         Assert.hasText(this.realm, "realm 이 반드시 특정되어야 합니다");
     }
 }

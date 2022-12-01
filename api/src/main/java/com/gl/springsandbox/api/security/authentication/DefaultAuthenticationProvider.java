@@ -1,4 +1,4 @@
-package com.gl.springsandbox.api.security.authorizaion;
+package com.gl.springsandbox.api.security.authentication;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;

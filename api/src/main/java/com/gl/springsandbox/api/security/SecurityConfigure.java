@@ -34,9 +34,6 @@ import java.util.stream.Stream;
 @EnableWebSecurity
 public class SecurityConfigure {
 
-    @Value("${:_atc}")
-    private String realmValue;
-
     private final OncePerRequestFilter customAuthenticationFilter;
 
     public SecurityConfigure(DefaultAuthenticationFilter customAuthenticationFilter) {
@@ -92,7 +89,8 @@ public class SecurityConfigure {
                 .and()
                 .exceptionHandling()
                 .accessDeniedHandler(new AccessDeniedHandlerImpl())
-                .authenticationEntryPoint(defaultAuthenticationEntryPoint());
+                .and()
+                .logout();
 
         return http.build();
     }
@@ -102,13 +100,6 @@ public class SecurityConfigure {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AuthenticationEntryPoint defaultAuthenticationEntryPoint() throws Exception {
-        DefaultAuthenticationEntryPoint authenticationEntryPoint = new DefaultAuthenticationEntryPoint();
-        authenticationEntryPoint.setRealm(realmValue);
-        authenticationEntryPoint.afterPropertiesSet();
-        return authenticationEntryPoint;
-    }
 
     @Bean
     AndRequestMatcher authenticationPathMatcher() {

@@ -32,7 +32,7 @@ public class DefaultAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver;
 
-    private final SecurityContextRepository securityContextRepository = new NullSecurityContextRepository();
+//    private final SecurityContextRepository securityContextRepository = new NullSecurityContextRepository();
 
     private AndRequestMatcher matcherList;
 
@@ -100,7 +100,7 @@ public class DefaultAuthenticationFilter extends OncePerRequestFilter {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
-        this.securityContextRepository.saveContext(context, request, response);
+//        this.securityContextRepository.saveContext(context, request, response);
         this.successHandler.onAuthenticationSuccess(request, response, chain, authentication);
     }
 
