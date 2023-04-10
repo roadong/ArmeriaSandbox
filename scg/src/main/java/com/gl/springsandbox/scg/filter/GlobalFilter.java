@@ -7,12 +7,12 @@ import org.springframework.cloud.sleuth.http.HttpServerHandler;
 import org.springframework.cloud.sleuth.instrument.web.TraceWebFilter;
 import org.springframework.stereotype.Component;
 
-@Component
-@Slf4j
-public class GlobalFilter extends TraceWebFilter {
-    public GlobalFilter(Tracer tracer,
-                        HttpServerHandler handler,
-                        CurrentTraceContext currentTraceContext) {
-        super(tracer, handler, currentTraceContext);
-    }
-}
+//@Component
+//@Slf4j
+//public class GlobalFilter extends TraceWebFilter {
+//    public GlobalFilter(Tracer tracer,
+//                        HttpServerHandler handler,
+//                        CurrentTraceContext currentTraceContext) {
+//        super(tracer, handler, currentTraceContext);
+//    }
+//}

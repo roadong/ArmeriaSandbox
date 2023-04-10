@@ -33,5 +33,15 @@ dependencies {
     // 버전업 안됨 (https://github.com/spring-projects/spring-boot/issues/12649)
     implementation("ch.qos.logback:logback-classic:1.2.11")
     implementation("ch.qos.logback:logback-core:1.2.11")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+//    testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock")
+    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
+    //testImplementation("io.projectreactor:reactor-test")
+
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
